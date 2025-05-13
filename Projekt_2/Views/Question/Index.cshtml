@@ -1,0 +1,47 @@
+@model IEnumerable<Projekt_2.Models.Question>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Question list</h1>
+
+<p>
+    <a asp-action="Create" asp-route-type="TestOne">Create new test question with one answer</a>
+</p>
+<p>
+    <a asp-action="Create" asp-route-type="TestMulti">Create new test question with multiple answer</a>
+</p>
+<p>
+    <a asp-action="Create" asp-route-type="Open">Create new open question</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Text of question
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Project)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuestionText)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Project.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,87 @@
+@using Projekt_2.ViewModels
+@model Projekt_2.ViewModels.CreateQuestionViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Question</h4>
+<hr/>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="QuestionType" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="QuestionText" class="control-label"></label>
+                <input asp-for="QuestionText" class="form-control"/>
+                <span asp-validation-for="QuestionText" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProjectId" class="control-label"></label>
+                <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.ProjectId"></select>
+            </div>
+            @switch (Model.QuestionType)
+            {
+                case QuestionType.TestOne:
+                    <div class="form-group">
+                        @for (var i = 0; i < Model.Answers.Count; i++)
+                        {
+                            <div class="answer-item mb-3">
+                                <label class="control-label">Answer @(i + 1)</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="radio" name="CorrectAnswerIndex" value="@i"
+                                           id="radio_@i" @(Model.CorrectAnswerIndex == i ? "checked" : "")/>
+                                    <input type="text" asp-for="@Model.Answers[i].Text" class="form-control"
+                                           data-val="true" data-val-required="Answer text is required"/>
+                                    <input type="hidden" asp-for="@Model.Answers[i].IsCorrect"/>
+                                </div>
+                                <span asp-validation-for="@Model.Answers[i].Text" class="text-danger"></span>
+                            </div>
+                        }
+                    </div>
+                    break;
+                case QuestionType.TestMulti:
+                    <div class="form-group">
+                        @for (var i = 0; i < Model.Answers.Count; i++)
+                        {
+                            <div class="answer-item mb-3">
+                                <label class="control-label">Answer @(i + 1)</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="checkbox" asp-for="@Model.Answers[i].IsCorrect" id="check_@i"/>
+                                    <input type="text" asp-for="@Model.Answers[i].Text" class="form-control"
+                                           data-val="true" data-val-required="Answer text is required"/>
+                                </div>
+                                <span asp-validation-for="@Model.Answers[i].Text" class="text-danger"></span>
+                            </div>
+                        }
+                    </div>
+                    break;
+                case QuestionType.Open:
+                    <div class="form-group">
+                        <label asp-for="OpenQuestionAnswer" class="control-label">Answer</label>
+                        <textarea asp-for="OpenQuestionAnswer" class="form-control" rows="4"></textarea>
+                        <span asp-validation-for="OpenQuestionAnswer" class="text-danger"></span>
+                    </div>
+                    break;
+                default:
+                    <p class="text-bg-danger">
+                        Something went wrong
+                    </p>
+                    break;
+            }
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

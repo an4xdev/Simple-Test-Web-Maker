@@ -17,6 +17,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasDiscriminator<string>("QuestionType")
             .HasValue<Question>("Question")
             .HasValue<TestQuestion>("TestQuestion")
+            .HasValue<OpenQuestion>("OpenQuestion")
             .HasValue<TestOneQuestion>("TestOneQuestion")
             .HasValue<TestMultiQuestion>("TestMultiQuestion");
 
