@@ -31,7 +31,7 @@
                         @for (var i = 0; i < Model.Answers.Count; i++)
                         {
                             <div class="answer-item mb-3">
-                                <label class="control-label">Answer @(i + 1)</label>
+                                <label class="control-label">@(Model.Answers[i].Numeration)</label>
                                 <div class="d-flex align-items-center gap-2">
                                     <input type="radio" name="CorrectAnswerIndex" value="@i"
                                            id="radio_@i" @(Model.CorrectAnswerIndex == i ? "checked" : "")/>
@@ -49,9 +49,13 @@
                         @for (var i = 0; i < Model.Answers.Count; i++)
                         {
                             <div class="answer-item mb-3">
-                                <label class="control-label">Answer @(i + 1)</label>
+                                <label class="control-label">@(Model.Answers[i].Numeration)</label>
                                 <div class="d-flex align-items-center gap-2">
-                                    <input type="checkbox" asp-for="@Model.Answers[i].IsCorrect" id="check_@i"/>
+
+                                    @{
+                                        var i1 = i;
+                                    }
+                                    <input type="checkbox" asp-for="@Model.Answers[i].IsCorrect" id="check_@i1"/>
                                     <input type="text" asp-for="@Model.Answers[i].Text" class="form-control"
                                            data-val="true" data-val-required="Answer text is required"/>
                                 </div>

@@ -7,4 +7,6 @@ public class TestAnswer
     public bool IsCorrect { get; set; }
     public Guid TestQuestionId { get; set; }
     public TestQuestion TestQuestion { get; set; } = null!;
+
+    public TestAnswerNumeration Numeration { get; set; }
 }

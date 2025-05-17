@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Projekt_2.Models;
+﻿namespace Projekt_2.Models;
 
 public class TestQuestion : Question
 {

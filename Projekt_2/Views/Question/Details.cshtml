@@ -1,4 +1,4 @@
-@model Projekt_2.Models.Question
+@model Projekt_2.ViewModels.QuestionDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -22,9 +22,64 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Project.Name)
         </dd>
+        <dt class = "col-sm-2">
+            Question type
+        </dt>
+        <dd class = "col-sm-10">
+            @switch (Model.QuestionType)
+            {
+                case QuestionType.TestOne:
+                    <span>Test question with one answer</span>
+                    break;
+                case QuestionType.TestMulti:
+                    <span>Test question with multiple answers</span>
+                    break;
+                case QuestionType.Open:
+                    <span>Open question</span>
+                    break;
+                default:
+                    <span>Unknown</span>
+                    break;
+            }
+        </dd>
     </dl>
+    @switch (Model.QuestionType)
+    {
+        case QuestionType.TestOne:
+            <p>Answers:</p>
+            foreach (var answer in Model.Answers)
+            {
+                <label>
+                    <input type="radio" checked="@answer.IsCorrect" disabled="disabled"/>
+                    @answer.Numeration - @answer.Text
+                </label>
+                <br/>
+            }
+            break;
+        case QuestionType.TestMulti:
+            <p>Answers:</p>
+            foreach (var answer in Model.Answers)
+            {
+                <label>
+                    <input type="checkbox" checked="@answer.IsCorrect" disabled="disabled"/>
+                    @answer.Numeration - @answer.Text
+                </label><br/>
+            }
+            break;
+        case QuestionType.Open:
+            <p>
+                Answer: @Model.OpenQuestionAnswer
+            </p>
+            break;
+        default:
+            <p>Something went wrong</p>
+            break;
+    }
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a> |
+    <a asp-controller="Question" asp-action="Index" asp-route-projekt="@Model.Project.Name">Back to questions by project</a> |
+    <a asp-controller="Project" asp-action="Details" asp-route-id="@Model.Project.Id">Back to project details</a> |
     <a asp-action="Index">Back to List</a>
 </div>

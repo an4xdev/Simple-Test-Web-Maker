@@ -19,9 +19,9 @@ public class CreateQuestionViewModel
 
     public List<TestAnswerViewModel> Answers { get; set; } =
     [
-        new() { IsCorrect = false, Text = string.Empty },
-        new() { IsCorrect = false, Text = string.Empty },
-        new() { IsCorrect = false, Text = string.Empty },
-        new() { IsCorrect = false, Text = string.Empty }
+        new() { IsCorrect = false, Text = string.Empty, Numeration = TestAnswerNumeration.A },
+        new() { IsCorrect = false, Text = string.Empty, Numeration = TestAnswerNumeration.B },
+        new() { IsCorrect = false, Text = string.Empty, Numeration = TestAnswerNumeration.C },
+        new() { IsCorrect = false, Text = string.Empty, Numeration = TestAnswerNumeration.D }
     ];
 }

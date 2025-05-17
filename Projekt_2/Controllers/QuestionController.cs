@@ -15,12 +15,12 @@ namespace Projekt_2.Controllers
             if (!string.IsNullOrEmpty(projekt))
             {
                 var questionsByName = context.Questions.Include(q => q.Project).Where(q => q.Project.Name == projekt);
-                return View(await questionsByName.ToListAsync());
+                return View(await questionsByName.Select(q => new QuestionIndexViewModel(q)).ToListAsync());
             }
 
             var questions = context.Questions.Include(q => q.Project);
 
-            return View(await questions.ToListAsync());
+            return View(await questions.Select(q => new QuestionIndexViewModel(q)).ToListAsync());
         }
 
         // GET: Question/Details/5
@@ -39,7 +39,35 @@ namespace Projekt_2.Controllers
                 return NotFound();
             }
 
-            return View(question);
+            var questionViewModel = new QuestionDetailsViewModel(question, question.Project);
+
+            var testAnswers = new List<TestAnswerViewModel>(4);
+
+            switch (question)
+            {
+                case TestOneQuestion or TestMultiQuestion:
+                {
+                    var testAnswersDb = context.TestAnswers.Where(ta => ta.TestQuestionId == question.Id).OrderBy(ta => ta.Numeration).ToList();
+                    testAnswers
+                        .AddRange(testAnswersDb
+                            .Select(ta => new TestAnswerViewModel
+                                {
+                                    Id = ta.Id,
+                                    Text = ta.Text,
+                                    IsCorrect = ta.IsCorrect,
+                                    Numeration = ta.Numeration
+                                }
+                            )
+                        );
+                    questionViewModel.Answers = testAnswers;
+                    break;
+                }
+                case OpenQuestion oq:
+                    questionViewModel.OpenQuestionAnswer = oq.Answer;
+                    break;
+            }
+
+            return View(questionViewModel);
         }
 
         // GET: Question/Create
@@ -92,7 +120,7 @@ namespace Projekt_2.Controllers
                     {
                         if (string.IsNullOrWhiteSpace(question.Answers[i].Text))
                         {
-                            ModelState.AddModelError($"Answers[{i}].Text", $"Answer {i+1} text is required");
+                            ModelState.AddModelError($"Answers[{i}].Text", $"Answer {i + 1} text is required");
                         }
                     }
 
@@ -120,6 +148,7 @@ namespace Projekt_2.Controllers
                             Id = Guid.NewGuid(),
                             Text = question.Answers[i].Text,
                             IsCorrect = i == question.CorrectAnswerIndex,
+                            Numeration = question.Answers[i].Numeration,
                         });
                     }
                     else
@@ -128,7 +157,8 @@ namespace Projekt_2.Controllers
                         {
                             Id = Guid.NewGuid(),
                             Text = question.Answers[i].Text,
-                            IsCorrect = question.Answers[i].IsCorrect
+                            IsCorrect = question.Answers[i].IsCorrect,
+                            Numeration = question.Answers[i].Numeration,
                         });
                     }
                 }

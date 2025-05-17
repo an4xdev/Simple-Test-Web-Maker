@@ -1,0 +1,108 @@
+@model Projekt_2.ViewModels.PaginatedList<Projekt_2.Models.TestAnswer>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Test Answers</h1>
+
+<form asp-action="Index" method="get">
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="searchQuestion">Question:</label>
+            <input type="text" id="searchQuestion" name="searchQuestion" value="@ViewData["CurrentQuestionFilter"]" class="form-control" />
+        </div>
+        <div class="form-group col-md-4">
+            <label for="searchAnswer">Answer Text:</label>
+            <input type="text" id="searchAnswer" name="searchAnswer" value="@ViewData["CurrentAnswerFilter"]" class="form-control" />
+        </div>
+        <div class="form-group col-md-4">
+            <label>&nbsp;</label>
+            <div>
+                <button type="submit" class="btn btn-primary">Search</button>
+                <a asp-action="Index" class="btn btn-secondary">Clear</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["QuestionSortParam"]" asp-route-searchQuestion="@ViewData["CurrentQuestionFilter"]" asp-route-searchAnswer="@ViewData["CurrentAnswerFilter"]">
+                    Question
+                </a>
+            </th>
+            <th>Answer</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CorrectSortParam"]" asp-route-searchQuestion="@ViewData["CurrentQuestionFilter"]" asp-route-searchAnswer="@ViewData["CurrentAnswerFilter"]">
+                    Is Correct
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NumerationSortParam"]" asp-route-searchQuestion="@ViewData["CurrentQuestionFilter"]" asp-route-searchAnswer="@ViewData["CurrentAnswerFilter"]">
+                    Numeration
+                </a>
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.TestQuestion.QuestionText</td>
+                <td>@item.Text</td>
+                <td>@item.IsCorrect</td>
+                <td>@Html.DisplayFor(modelItem => item.Numeration)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<div class="d-flex justify-content-center">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item @prevDisabled">
+                <a class="page-link" asp-action="Index"
+                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                   asp-route-pageNumber="@(Model.PageIndex - 1)"
+                   asp-route-searchQuestion="@ViewData["CurrentQuestionFilter"]"
+                   asp-route-searchAnswer="@ViewData["CurrentAnswerFilter"]">
+                    Previous
+                </a>
+            </li>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                       asp-route-pageNumber="@i"
+                       asp-route-searchQuestion="@ViewData["CurrentQuestionFilter"]"
+                       asp-route-searchAnswer="@ViewData["CurrentAnswerFilter"]">
+                        @i
+                    </a>
+                </li>
+            }
+            <li class="page-item @nextDisabled">
+                <a class="page-link" asp-action="Index"
+                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                   asp-route-pageNumber="@(Model.PageIndex + 1)"
+                   asp-route-searchQuestion="@ViewData["CurrentQuestionFilter"]"
+                   asp-route-searchAnswer="@ViewData["CurrentAnswerFilter"]">
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
