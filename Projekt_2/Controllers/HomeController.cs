@@ -4,10 +4,8 @@ using Projekt_2.Models;
 
 namespace Projekt_2.Controllers;
 
-public class HomeController(ILogger<HomeController> logger) : Controller
+public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger = logger;
-
     public IActionResult Index()
     {
         return View();

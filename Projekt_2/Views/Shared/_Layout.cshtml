@@ -7,7 +7,6 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    @* TODO: remove? <link rel="stylesheet" href="~/Projekt_2.styles.css" asp-append-version="true"/> *@
 </head>
 <body>
 <header>
@@ -30,6 +29,12 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Question" asp-action="Index">Questions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="TestAnswer" asp-action="Index">Test answers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Statistic" asp-action="Index">Statistics of tests</a>
                         </li>
                     </ul>
                 </div>

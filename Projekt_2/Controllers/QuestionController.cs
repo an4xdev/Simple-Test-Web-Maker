@@ -212,8 +212,16 @@ namespace Projekt_2.Controllers
             {
                 Id = id.Value,
                 QuestionText = question.QuestionText,
-                ProjectId = question.ProjectId
+                ProjectId = question.ProjectId,
+                IsOpen = false,
+                OpenAnswer = string.Empty,
             };
+
+            if (question is OpenQuestion openQuestion)
+            {
+                questionModel.IsOpen = true;
+                questionModel.OpenAnswer = openQuestion.Answer;
+            }
             ViewData["ProjectId"] = new SelectList(context.Projects, "Id", "Name", question.ProjectId);
             return View(questionModel);
         }
@@ -223,25 +231,39 @@ namespace Projekt_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,QuestionText,ProjectId")] QuestionViewModel question)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,QuestionText,ProjectId,IsOpen,OpenAnswer")] QuestionViewModel question)
         {
             if (id != question.Id)
             {
                 return NotFound();
             }
 
+            if (!question.IsOpen)
+            {
+                ModelState.Remove("OpenAnswer");
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var questionDb = new Question
+                    var existingQuestion = await context.Questions.FindAsync(question.Id);
+
+                    if (existingQuestion == null)
                     {
-                        Id = question.Id,
-                        QuestionText = question.QuestionText,
-                        ProjectId = question.ProjectId
-                    };
-                    context.Update(questionDb);
+                        return NotFound();
+                    }
+
+                    existingQuestion.QuestionText = question.QuestionText;
+                    existingQuestion.ProjectId = question.ProjectId;
+
+                    if (existingQuestion is OpenQuestion openQuestion && question.IsOpen)
+                    {
+                        openQuestion.Answer = question.OpenAnswer;
+                    }
+
                     await context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -249,11 +271,8 @@ namespace Projekt_2.Controllers
                     {
                         return NotFound();
                     }
-
                     throw;
                 }
-
-                return RedirectToAction(nameof(Index));
             }
 
             ViewData["ProjectId"] = new SelectList(context.Projects, "Id", "Name", question.ProjectId);

@@ -1,0 +1,126 @@
+﻿@model IEnumerable<Projekt_2.ViewModels.StatisticViewModel>
+
+@{
+    ViewData["Title"] = "Statistics";
+}
+
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Project Statistics</h1>
+            <hr class="my-4">
+        </div>
+    </div>
+
+    @foreach (var item in Model)
+    {
+        <div class="card mb-5 shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">@item.ProjectName</h3>
+            </div>
+
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="alert alert-info">
+                            <h4 class="alert-heading">Overview</h4>
+                            <p class="mb-0">Total Questions: <strong>@item.CountOfQuestions</strong></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header bg-secondary text-white">
+                                <h5 class="mb-0">Question Types</h5>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th class="text-center">Count</th>
+                                            <th class="text-center">Percentage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            var totalQuestions = item.CountOfQuestions == 0 ? 1 : item.CountOfQuestions;
+                                            var singlePercent = Math.Round((double)item.CountOfTestOneQuestions / totalQuestions * 100, 1);
+                                            var multiPercent = Math.Round((double)item.CountOfTestMultiQuestions / totalQuestions * 100, 1);
+                                            var openPercent = Math.Round((double)item.CountOfOpenQuestions / totalQuestions * 100, 1);
+                                        }
+                                        <tr>
+                                            <td>Single Choice</td>
+                                            <td class="text-center font-weight-bold">@item.CountOfTestOneQuestions</td>
+                                            <td class="text-center">@singlePercent%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Multiple Choice</td>
+                                            <td class="text-center font-weight-bold">@item.CountOfTestMultiQuestions</td>
+                                            <td class="text-center">@multiPercent%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Open Questions</td>
+                                            <td class="text-center font-weight-bold">@item.CountOfOpenQuestions</td>
+                                            <td class="text-center">@openPercent%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Correct Answers by Option</h5>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Option</th>
+                                            <th class="text-center">Count</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="badge badge-pill badge-primary">A</span> Option A</td>
+                                            <td class="text-center font-weight-bold">@item.CountOfCorrectAAnswers</td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="badge badge-pill badge-info">B</span> Option B</td>
+                                            <td class="text-center font-weight-bold">@item.CountOfCorrectBAnswers</td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="badge badge-pill badge-warning">C</span> Option C</td>
+                                            <td class="text-center font-weight-bold">@item.CountOfCorrectCAnswers</td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="badge badge-pill badge-danger">D</span> Option D</td>
+                                            <td class="text-center font-weight-bold">@item.CountOfCorrectDAnswers</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot class="table-active">
+                                        <tr>
+                                            <th>Total</th>
+                                            <th class="text-center">
+                                                @(item.CountOfCorrectAAnswers + item.CountOfCorrectBAnswers + item.CountOfCorrectCAnswers + item.CountOfCorrectDAnswers)
+                                            </th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer text-muted">
+                Project ID: @item.ProjectId
+            </div>
+        </div>
+    }
+</div>
