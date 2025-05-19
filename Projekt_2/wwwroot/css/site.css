@@ -37,3 +37,7 @@ body {
 #change:hover{
   cursor: pointer;
 }
+
+#menu{
+  align-items: baseline;
+}

@@ -82,15 +82,19 @@
                     Previous
                 </a>
             </li>
-            @for (int i = 1; i <= Model.TotalPages; i++)
+            @for (var i = 1; i <= Model.TotalPages; i++)
             {
                 <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+
+                    @{
+                        var i1 = i;
+                    }
                     <a class="page-link" asp-action="Index"
                        asp-route-sortOrder="@ViewData["CurrentSort"]"
-                       asp-route-pageNumber="@i"
+                       asp-route-pageNumber="@i1"
                        asp-route-searchQuestion="@ViewData["CurrentQuestionFilter"]"
                        asp-route-searchAnswer="@ViewData["CurrentAnswerFilter"]">
-                        @i
+                        @i1
                     </a>
                 </li>
             }

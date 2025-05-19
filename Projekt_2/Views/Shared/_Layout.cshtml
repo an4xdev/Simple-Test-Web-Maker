@@ -11,7 +11,7 @@
 <body>
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
-        <div class="container-fluid" style="align-items: baseline;">
+        <div class="container-fluid" id="menu">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Test management</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                     aria-controls="navbarSupportedContent"
@@ -25,16 +25,18 @@
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Project" asp-action="Index">Project</a>
+                            <a class="nav-link" asp-area="" asp-controller="Project" asp-action="Index">Projects</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Question" asp-action="Index">Questions</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="TestAnswer" asp-action="Index">Test answers</a>
+                            <a class="nav-link" asp-area="" asp-controller="TestAnswer" asp-action="Index">Test
+                                answers</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Statistic" asp-action="Index">Statistics of tests</a>
+                            <a class="nav-link" asp-area="" asp-controller="Statistic" asp-action="Index">Statistics of
+                                tests</a>
                         </li>
                     </ul>
                 </div>
@@ -61,6 +63,35 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+
+        const button = document.getElementById("change");
+        const html = document.getElementById("html");
+        button.addEventListener("click", function () {
+            if (html.getAttribute('data-bs-theme') === 'light') {
+                html.setAttribute('data-bs-theme', 'dark');
+                button.textContent = '☀️';
+                localStorage.setItem("theme", "dark")
+            } else {
+                html.setAttribute('data-bs-theme', 'light');
+                button.textContent = '🌙';
+                localStorage.setItem("theme", "light");
+            }
+        });
+
+        if (localStorage.getItem("theme") != null) {
+            const theme = localStorage.getItem("theme");
+            if (theme === "dark") {
+                html.setAttribute('data-bs-theme', 'dark');
+                button.textContent = '☀️';
+            } else if (theme === "light") {
+                html.setAttribute('data-bs-theme', 'light');
+                document.getElementById("change").textContent = '🌙';
+            }
+            else {
+                alert("DEBUG: Theme changed is not supported.");
+            }
+            return;
+        }
         // https://www.30secondsofcode.org/js/s/prefers-color-scheme
 
         const prefersDarkColorScheme = () =>
@@ -70,22 +101,12 @@
 
         if (prefersDarkColorScheme()) {
             document.getElementById("change").textContent = '☀️';
-        }
-        else {
+            localStorage.setItem("theme", "dark")
+        } else {
             document.getElementById("change").textContent = '🌙';
+            localStorage.setItem("theme", "light");
         }
 
-        const button = document.getElementById("change");
-        button.addEventListener("click", function () {
-            const html = document.getElementById("html");
-            if (html.getAttribute('data-bs-theme') === 'light') {
-                html.setAttribute('data-bs-theme', 'dark');
-                button.textContent = '☀️';
-            } else {
-                html.setAttribute('data-bs-theme', 'light');
-                button.textContent = '🌙';
-            }
-        })
     })
 </script>
 @await RenderSectionAsync("Scripts", required: false)

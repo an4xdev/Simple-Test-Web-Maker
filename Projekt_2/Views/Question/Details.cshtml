@@ -77,9 +77,13 @@
     }
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
     <a asp-controller="Question" asp-action="Index" asp-route-projekt="@Model.Project.Name">Back to questions by project</a> |
+    @if (Model.QuestionType is QuestionType.TestOne or QuestionType.TestMulti)
+    {
+        <a asp-controller="TestAnswer" asp-action="Index" asp-route-searchQuestion="@Model.QuestionText">Go to test answers in this question</a> <span>|</span>
+    }
     <a asp-controller="Project" asp-action="Details" asp-route-id="@Model.Project.Id">Back to project details</a> |
     <a asp-action="Index">Back to List</a>
 </div>
