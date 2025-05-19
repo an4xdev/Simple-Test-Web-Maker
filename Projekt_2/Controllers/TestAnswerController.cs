@@ -77,7 +77,7 @@ namespace Projekt_2.Controllers
                 return NotFound();
             }
 
-            var testAnswer = await context.TestAnswers.FindAsync(id);
+            var testAnswer = await context.TestAnswers.Include(ta => ta.TestQuestion).FirstOrDefaultAsync(ta => ta.Id == id);
             if (testAnswer == null)
             {
                 return NotFound();
@@ -98,10 +98,21 @@ namespace Projekt_2.Controllers
                 return NotFound();
             }
 
-            var existingAnswer = await context.TestAnswers.FindAsync(id);
+            var existingAnswer = await context.TestAnswers.Include(ta => ta.TestQuestion).FirstOrDefaultAsync(ta => ta.Id == id);
             if (existingAnswer == null)
             {
                 return NotFound();
+            }
+
+            if (existingAnswer.TestQuestion is TestOneQuestion && testAnswer.IsCorrect)
+            {
+                var anotherTestAnswer = await context.TestAnswers
+                    .Where(ta => ta.TestQuestionId == existingAnswer.TestQuestionId && ta.Id != id && ta.IsCorrect)
+                    .FirstOrDefaultAsync();
+                // Create method should check if single answer question has exactly one answer, also on form
+                // we are using radio so we have already checked one answer
+                anotherTestAnswer!.IsCorrect = false;
+                await context.SaveChangesAsync();
             }
 
             existingAnswer.Text = testAnswer.Text;

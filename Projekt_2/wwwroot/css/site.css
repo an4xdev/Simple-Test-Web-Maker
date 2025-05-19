@@ -30,14 +30,115 @@ body {
   text-align: start;
 }
 
-#change{
-  font-size: 1.5rem;
-}
-
-#change:hover{
-  cursor: pointer;
-}
-
 #menu{
   align-items: baseline;
 }
+
+#container{
+  min-height: 80vh;
+}
+
+.navbar {
+  background-color: rgba(33, 37, 41, 0.95);
+  padding: 0.8rem 1rem;
+  transition: all 0.3s ease;
+}
+
+html[data-bs-theme="light"] .navbar {
+  background-color: rgba(248, 249, 250, 0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #60a5fa !important;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.navbar-brand:hover {
+  transform: translateY(-2px);
+}
+
+.nav-link {
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  margin: 0 0.2rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+}
+
+html[data-bs-theme="dark"] .nav-link {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+html[data-bs-theme="dark"] .nav-link:hover,
+html[data-bs-theme="dark"] .nav-link:focus {
+  color: white !important;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+html[data-bs-theme="light"] .nav-link {
+  color: rgba(33, 37, 41, 0.85) !important;
+}
+
+html[data-bs-theme="light"] .nav-link:hover,
+html[data-bs-theme="light"] .nav-link:focus {
+  color: #2b5797 !important;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.nav-link.active {
+  color: #fff !important;
+  background-color: #0d6efd;
+}
+
+#change {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#change:hover {
+  transform: rotate(15deg);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+html[data-bs-theme="light"] #change:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+@media (max-width: 992px) {
+  .navbar-collapse {
+    padding: 1rem 0;
+  }
+
+  .nav-link {
+    margin: 0.2rem 0;
+  }
+}
+
+.footer {
+  padding: 1.5rem 0;
+  background-color: rgba(33, 37, 41, 0.95);
+  font-size: 0.9rem;
+}
+
+html[data-bs-theme="light"] .footer {
+  background-color: rgba(248, 249, 250, 0.95);
+}
+
+/*.gap*/

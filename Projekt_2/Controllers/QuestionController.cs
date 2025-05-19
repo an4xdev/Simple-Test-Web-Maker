@@ -47,7 +47,11 @@ namespace Projekt_2.Controllers
             {
                 case TestOneQuestion or TestMultiQuestion:
                 {
-                    var testAnswersDb = context.TestAnswers.Where(ta => ta.TestQuestionId == question.Id).OrderBy(ta => ta.Numeration).ToList();
+                    var testAnswersDb = context
+                        .TestAnswers
+                        .Where(ta => ta.TestQuestionId == question.Id)
+                        .OrderBy(ta => ta.Numeration)
+                        .ToList();
                     testAnswers
                         .AddRange(testAnswersDb
                             .Select(ta => new TestAnswerViewModel
@@ -91,9 +95,7 @@ namespace Projekt_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(
-            // [Bind("QuestionText,ProjectId")]
-            CreateQuestionViewModel question)
+        public async Task<IActionResult> Create(CreateQuestionViewModel question)
         {
             switch (question.QuestionType)
             {

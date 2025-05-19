@@ -1,90 +1,223 @@
-@model Projekt_2.ViewModels.CreateQuestionViewModel
+@model CreateQuestionViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Question";
 }
 
-<h1>Create</h1>
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col">
+            <h1>Create Question</h1>
+            <hr class="my-3">
+        </div>
+    </div>
 
-<h4>Question</h4>
-<hr/>
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="QuestionType" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="QuestionText" class="control-label"></label>
-                <input asp-for="QuestionText" class="form-control"/>
-                <span asp-validation-for="QuestionText" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProjectId" class="control-label"></label>
-                <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.ProjectId"></select>
-            </div>
-            @switch (Model.QuestionType)
-            {
-                case QuestionType.TestOne:
-                    <div class="form-group">
-                        @for (var i = 0; i < Model.Answers.Count; i++)
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        @switch (Model.QuestionType)
                         {
-                            <div class="answer-item mb-3">
-                                <label class="control-label">@(Model.Answers[i].Numeration)</label>
-                                <div class="d-flex align-items-center gap-2">
-                                    <input type="radio" name="CorrectAnswerIndex" value="@i"
-                                           id="radio_@i" @(Model.CorrectAnswerIndex == i ? "checked" : "")/>
-                                    <input type="text" asp-for="@Model.Answers[i].Text" class="form-control"
-                                           data-val="true" data-val-required="Answer text is required"/>
-                                    <input type="hidden" asp-for="@Model.Answers[i].IsCorrect"/>
-                                </div>
-                                <span asp-validation-for="@Model.Answers[i].Text" class="text-danger"></span>
-                            </div>
+                            case QuestionType.TestOne:
+                                <i class="fas fa-check-circle me-2"></i>
+                                <span>Single Choice Question</span>
+                                break;
+                            case QuestionType.TestMulti:
+                                <i class="fas fa-check-square me-2"></i>
+                                <span>Multiple Choice Question</span>
+                                break;
+                            case QuestionType.Open:
+                                <i class="fas fa-pencil-alt me-2"></i>
+                                <span>Open Question</span>
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
                         }
-                    </div>
-                    break;
-                case QuestionType.TestMulti:
-                    <div class="form-group">
-                        @for (var i = 0; i < Model.Answers.Count; i++)
-                        {
-                            <div class="answer-item mb-3">
-                                <label class="control-label">@(Model.Answers[i].Numeration)</label>
-                                <div class="d-flex align-items-center gap-2">
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        <input type="hidden" asp-for="QuestionType"/>
 
-                                    @{
-                                        var i1 = i;
-                                    }
-                                    <input type="checkbox" asp-for="@Model.Answers[i].IsCorrect" id="check_@i1"/>
-                                    <input type="text" asp-for="@Model.Answers[i].Text" class="form-control"
-                                           data-val="true" data-val-required="Answer text is required"/>
-                                </div>
-                                <span asp-validation-for="@Model.Answers[i].Text" class="text-danger"></span>
+                        <div class="form-group mb-4">
+                            <label asp-for="QuestionText" class="form-label fw-bold">Question Text</label>
+                            <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-question"></i>
+                                        </span>
+                                <input asp-for="QuestionText" class="form-control" placeholder="Enter your question"/>
                             </div>
+                            <span asp-validation-for="QuestionText" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="ProjectId" class="form-label fw-bold">Project</label>
+                            <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-project-diagram"></i>
+                                        </span>
+                                <select asp-for="ProjectId" class="form-select" asp-items="ViewBag.ProjectId"></select>
+                            </div>
+                        </div>
+
+                        @switch (Model.QuestionType)
+                        {
+                            case QuestionType.TestOne:
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Answer Options</h5>
+                                        <small class="text-muted">Select one correct answer</small>
+                                    </div>
+                                    <div class="card-body">
+                                        @for (var i = 0; i < Model.Answers.Count; i++)
+                                        {
+                                            <div
+                                                class="answer-item mb-3 p-2">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio"
+                                                               name="CorrectAnswerIndex" value="@i"
+                                                               id="radio_@i"
+                                                               @(Model.CorrectAnswerIndex == i ? "checked" : "")/>
+                                                        <label class="form-check-label fw-bold" for="radio_@i">
+                                                            @(Model.Answers[i].Numeration)
+                                                        </label>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <input type="text" asp-for="@Model.Answers[i].Text"
+                                                               class="form-control"
+                                                               placeholder="Enter answer option"
+                                                               data-val="true"
+                                                               data-val-required="Answer text is required"/>
+                                                        <input type="hidden" asp-for="@Model.Answers[i].IsCorrect"/>
+                                                        <span asp-validation-for="@Model.Answers[i].Text"
+                                                              class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                break;
+
+                            case QuestionType.TestMulti:
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Answer Options</h5>
+                                        <small class="text-muted">Select all correct answers</small>
+                                    </div>
+                                    <div class="card-body">
+                                        @for (var i = 0; i < Model.Answers.Count; i++)
+                                        {
+                                            var i1 = i;
+                                            <div
+                                                class="answer-item mb-3 p-2">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox"
+                                                               asp-for="@Model.Answers[i].IsCorrect" id="check_@i1"/>
+                                                        <label class="form-check-label fw-bold" for="check_@i1">
+                                                            @(Model.Answers[i].Numeration)
+                                                        </label>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <input type="text" asp-for="@Model.Answers[i].Text"
+                                                               class="form-control"
+                                                               placeholder="Enter answer option"
+                                                               data-val="true"
+                                                               data-val-required="Answer text is required"/>
+                                                        <span asp-validation-for="@Model.Answers[i].Text"
+                                                              class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                break;
+
+                            case QuestionType.Open:
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Model Answer</h5>
+                                        <small class="text-muted">Enter the expected answer</small>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                                    <textarea asp-for="OpenQuestionAnswer" class="form-control" rows="4"
+                                                              placeholder="Enter the model answer for this open question"></textarea>
+                                            <span asp-validation-for="OpenQuestionAnswer" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                break;
+
+                            default:
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    Something went wrong with question type detection
+                                </div>
+                                break;
                         }
-                    </div>
-                    break;
-                case QuestionType.Open:
-                    <div class="form-group">
-                        <label asp-for="OpenQuestionAnswer" class="control-label">Answer</label>
-                        <textarea asp-for="OpenQuestionAnswer" class="form-control" rows="4"></textarea>
-                        <span asp-validation-for="OpenQuestionAnswer" class="text-danger"></span>
-                    </div>
-                    break;
-                default:
-                    <p class="text-bg-danger">
-                        Something went wrong
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Create Question
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-info-circle text-primary me-2"></i>
+                        Creating a Question
+                    </h5>
+
+                    @switch (Model.QuestionType)
+                    {
+                        case QuestionType.TestOne:
+                            <p class="card-text">
+                                You are creating a <strong>single choice</strong> question.
+                                Make sure to select exactly one correct answer option.
+                            </p>
+                            break;
+                        case QuestionType.TestMulti:
+                            <p class="card-text">
+                                You are creating a <strong>multiple choice</strong> question.
+                                You can select multiple correct answer options.
+                            </p>
+                            break;
+                        case QuestionType.Open:
+                            <p class="card-text">
+                                You are creating an <strong>open</strong> question.
+                                Provide a model answer that will be used for comparison.
+                            </p>
+                            break;
+                        default:
+                            <p class="card-text">
+                                You are creating an <strong>unknow</strong> question.
+                                Something went wrong.
+                            </p>
+                            break;
+                    }
+
+                    <hr>
+                    <p class="card-text text-muted">
+                        <small>
+                            This question will be added to your selected project and can be used in tests.
+                        </small>
                     </p>
-                    break;
-            }
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary"/>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-

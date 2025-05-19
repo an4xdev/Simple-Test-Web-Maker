@@ -1,37 +1,97 @@
-@model Projekt_2.Models.TestAnswer
+@model TestAnswer
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Answer Option";
 }
 
-<h1>Edit</h1>
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col">
+            <h1>Edit Answer Option</h1>
+            <hr class="my-3">
+        </div>
+    </div>
 
-<h4>TestAnswer</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Text" class="control-label"></label>
-                <input asp-for="Text" class="form-control" />
-                <span asp-validation-for="Text" class="text-danger"></span>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-edit me-2"></i>Update Answer Details
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="TestQuestionId" />
+
+                        <div class="form-group mb-4">
+                            <label asp-for="Text" class="form-label fw-bold">Answer Text</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-comment-alt"></i>
+                                </span>
+                                <input asp-for="Text" class="form-control" placeholder="Enter answer text" />
+                            </div>
+                            <span asp-validation-for="Text" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" asp-for="IsCorrect" id="isCorrectSwitch">
+                                <label class="form-check-label fw-bold" for="isCorrectSwitch">
+                                    Is Correct Answer
+                                </label>
+                            </div>
+                            <div class="text-muted small mt-1">
+                                Mark this option as a correct answer for the question
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsCorrect" /> @Html.DisplayNameFor(model => model.IsCorrect)
-                </label>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-info-circle text-primary me-2"></i>
+                        Editing Answer Option
+                    </h5>
+                    <p class="card-text">
+                        You can update the text of this answer option and set whether it's correct or not.
+                    </p>
+                    @if (Model.TestQuestion is TestOneQuestion)
+                    {
+                        <div class="alert alert-warning mt-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-exclamation-triangle me-2 text-warning"></i>
+                                <div>
+                                    <strong>Single Choice Question:</strong>
+                                    If you mark this answer as correct, any previously correct answer will automatically be marked as incorrect.
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <hr>
+                    <p class="card-text text-muted">
+                        <small>
+                            Answer ID: @Model.Id<br>
+                            Question ID: @Model.TestQuestionId
+                        </small>
+                    </p>
+                </div>
             </div>
-            <input type="hidden" asp-for="TestQuestionId" class="form-control"></input>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
